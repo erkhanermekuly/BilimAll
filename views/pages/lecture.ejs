@@ -46,6 +46,8 @@
 
     <%- include('../partials/footer') %>
 
+    <%- include('../partials/aiChat', { lectureId: lectureId }) %>
+
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         const lectureId = window.location.pathname.split('/')[2];
