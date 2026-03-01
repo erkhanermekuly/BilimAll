@@ -140,11 +140,7 @@ const PORT = process.env.PORT || 5000;
 
 // Старт сервера
 const startServer = async () => {
-    await connectDB(); // подключение к Postgres 
-    
-    // Синхронизация отключена - используем миграции
-    // await sequelize.sync(); 
-    
+    await connectDB(); 
     app.listen(PORT, () => {
         console.log(`Сервер запущен на http://localhost:${PORT}`);
     });
