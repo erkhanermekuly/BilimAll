@@ -14,6 +14,7 @@ module.exports = {
         name: 'Администратор',
         email: 'admin@bilimhub.com',
         password: password2,
+        role: 'admin',
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -21,6 +22,7 @@ module.exports = {
         name: 'Иван Иванов',
         email: 'ivan@example.com',
         password: password1,
+        role: 'user',
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -28,6 +30,7 @@ module.exports = {
         name: 'Мария Петрова',
         email: 'maria@example.com',
         password: password1,
+        role: 'user',
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -35,6 +38,7 @@ module.exports = {
         name: 'Алексей Сидоров',
         email: 'alex@example.com',
         password: password3,
+        role: 'user',
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -42,6 +46,7 @@ module.exports = {
         name: 'Елена Смирнова',
         email: 'elena@example.com',
         password: password3,
+        role: 'user',
         createdAt: new Date(),
         updatedAt: new Date()
       }

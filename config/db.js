@@ -20,18 +20,18 @@ const sequelize = new Sequelize(
     }
 );
 
-// Проверка подключения к базе данных
-const connectDB = async () => {
-    try {
-        await sequelize.authenticate();
-        console.log('✅ Подключение к базе данных PostgreSQL установлено успешно');
-        
-        // Синхронизация отключена - используем миграции
-        // await sequelize.sync({ alter: true });
-        // console.log('Модели синхронизированы с базой данных');
-    } catch (error) {
-        console.error('❌ Ошибка подключения к базе данных:', error.message);
-        process.exit(1);
+// Проверка подключения к базе данных (с повтором для Docker)
+const connectDB = async (retries = 5, delayMs = 2000) => {
+    for (let i = 0; i < retries; i++) {
+        try {
+            await sequelize.authenticate();
+            console.log('✅ Подключение к базе данных PostgreSQL установлено успешно');
+            return;
+        } catch (error) {
+            console.error(`❌ Подключение к БД (попытка ${i + 1}/${retries}):`, error.message);
+            if (i === retries - 1) process.exit(1);
+            await new Promise(r => setTimeout(r, delayMs));
+        }
     }
 };
 

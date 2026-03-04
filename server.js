@@ -7,9 +7,15 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const learningRoutes = require('./routes/learningRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 const { isAuthenticated } = require('./middleware/auth');
 
 const app = express();
+
+// Trust proxy (для корректного HTTPS и IP за Nginx/балансировщиком)
+if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+}
 
 // Middleware
 app.use(express.static(__dirname + '/public'));
@@ -65,7 +71,7 @@ app.get('/themes/:id', (req, res) => {
 
 // Страница лекции
 app.get('/lectures/:id', isAuthenticated, (req, res) => {
-    res.render('pages/lecture');
+    res.render('pages/lecture', { lectureId: req.params.id });
 });
 
 // Страница теста
@@ -135,6 +141,7 @@ app.use('/', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api', learningRoutes);
 app.use('/api', uploadRoutes);
+app.use('/api/ai', aiRoutes);
 
 const PORT = process.env.PORT || 5000;
 
