@@ -17,22 +17,22 @@
             <% } %>
             <form action="/register" method="post" data-validate>
                 <fieldset>
-                    <label for="name"><img src="/images/icons/user.png" alt=""></label>
-                    <input type="text" name="name" placeholder="Напишите имя" required>
+                    <label for="name">Имя</label>
+                    <input type="text" id="name" name="name" placeholder="Введите имя" required>
                 </fieldset>
                 <fieldset>
-                    <label for="email"><img src="/images/icons/user.png" alt=""></label>
-                    <input type="email" name="email" placeholder="Напишите email" required>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Введите email" required>
                 </fieldset>
                 <fieldset>
-                    <label for="password"><img src="/images/icons/lock.png" alt=""></label>
-                    <input type="password" name="password" placeholder="Password" required>
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" placeholder="Не менее 6 символов" required>
                 </fieldset>
                 <fieldset>
-                    <label for="confirmPassword"><img src="/images/icons/lock.png" alt=""></label>
-                    <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+                    <label for="confirmPassword">Повторите пароль</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Повторите пароль" required>
                 </fieldset>
-                <button type="submit">Register</button>
+                <button type="submit">Зарегистрироваться</button>
             </form>
             <p>У вас есть аккаунт? <a href="/login">Войдите</a></p>
         </div>

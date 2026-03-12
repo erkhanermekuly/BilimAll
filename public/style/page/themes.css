@@ -1,67 +1,70 @@
 .themes-container {
     max-width: 1200px;
     margin: 2rem auto;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
 }
 
-.page-header {
+.themes-container .page-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 
-.page-header h1 {
-    font-size: 2.5rem;
-    color: #2c3e50;
-    margin-bottom: 1rem;
+.themes-container .page-header h1 {
+    font-size: 1.75rem;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
 }
 
-.page-header p {
-    font-size: 1.2rem;
-    color: #7f8c8d;
+.themes-container .page-header p {
+    font-size: 1rem;
+    color: var(--color-text-muted);
 }
 
 .themes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
 }
 
 .theme-card {
-    background: white;
-    border-radius: 12px;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+    transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
 }
 
 .theme-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
 }
 
 .theme-image {
     width: 100%;
-    height: 200px;
+    height: 180px;
     object-fit: cover;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(160deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
 }
 
 .theme-content {
-    padding: 1.5rem;
+    padding: 1.25rem;
 }
 
 .theme-title {
-    font-size: 1.5rem;
-    color: #2c3e50;
+    font-size: 1.2rem;
+    color: var(--color-text);
     margin-bottom: 0.5rem;
+    font-weight: 600;
 }
 
 .theme-description {
-    color: #7f8c8d;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
     margin-bottom: 1rem;
-    line-height: 1.6;
 }
 
 .theme-meta {
@@ -69,47 +72,51 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 1rem;
-    border-top: 1px solid #ecf0f1;
+    border-top: 1px solid var(--color-border);
 }
 
 .lectures-count {
-    color: #3498db;
+    font-size: 0.9rem;
+    color: var(--color-primary);
     font-weight: 500;
 }
 
-.start-button {
-    background: #3498db;
+.theme-card .start-button {
+    background: var(--color-primary);
     color: white;
     border: none;
-    padding: 0.5rem 1.5rem;
-    border-radius: 6px;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    font-weight: 500;
-    transition: background 0.3s;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: var(--font);
+    transition: background 0.2s;
 }
 
-.start-button:hover {
-    background: #2980b9;
+.theme-card .start-button:hover {
+    background: var(--color-primary-hover);
 }
 
-.empty-state {
+.themes-container .empty-state {
     text-align: center;
-    padding: 4rem 2rem;
+    padding: 3rem 1.5rem;
 }
 
-.empty-state-icon {
-    font-size: 4rem;
+.themes-container .empty-state-icon {
+    font-size: 3rem;
     margin-bottom: 1rem;
 }
 
-.empty-state h2 {
-    color: #7f8c8d;
+.themes-container .empty-state h2 {
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
     margin-bottom: 0.5rem;
 }
 
-.loading {
+.themes-container .loading {
     text-align: center;
-    padding: 3rem;
-    font-size: 1.2rem;
-    color: #7f8c8d;
+    padding: 2.5rem;
+    font-size: 1rem;
+    color: var(--color-text-muted);
 }

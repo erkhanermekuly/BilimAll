@@ -1,60 +1,78 @@
 .theme-container {
     max-width: 1200px;
     margin: 2rem auto;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
+}
+
+.theme-container .back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.theme-container .back-button:hover {
+    color: var(--color-primary-hover);
 }
 
 .theme-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(160deg, var(--color-primary) 0%, var(--color-accent) 100%);
     color: white;
-    padding: 3rem 2rem;
-    border-radius: 12px;
-    margin-bottom: 2rem;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-md);
 }
 
 .theme-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
 }
 
 .theme-header p {
-    font-size: 1.2rem;
-    opacity: 0.9;
+    font-size: 1rem;
+    opacity: 0.95;
 }
 
 .lectures-list {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .lecture-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+    transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.25rem;
 }
 
 .lecture-card:hover {
-    transform: translateX(5px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    transform: translateX(4px);
+    box-shadow: var(--shadow-md);
 }
 
 .lecture-card.locked {
-    opacity: 0.6;
+    opacity: 0.7;
     cursor: not-allowed;
 }
 
 .lecture-number {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #3498db;
-    min-width: 60px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    min-width: 48px;
     text-align: center;
 }
 
@@ -62,56 +80,37 @@
     flex: 1;
 }
 
-.lecture-title {
-    font-size: 1.5rem;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
+.lecture-content .lecture-title {
+    font-size: 1.1rem;
+    color: var(--color-text);
+    margin-bottom: 0.4rem;
+    font-weight: 600;
 }
 
 .lecture-meta {
     display: flex;
-    gap: 1.5rem;
-    color: #7f8c8d;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
 }
 
 .lecture-status {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-}
-
-.status-icon {
-    font-size: 1.5rem;
-}
-
-.status-completed {
-    color: #27ae60;
+    gap: 0.4rem;
 }
 
 .status-in-progress {
-    color: #f39c12;
+    color: var(--color-primary);
 }
 
 .status-locked {
-    color: #95a5a6;
+    color: var(--color-text-muted);
 }
 
-.back-button {
-    display: inline-block;
-    margin-bottom: 2rem;
-    color: #3498db;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-.back-button:hover {
-    color: #2980b9;
-}
-
-.loading {
+.theme-container .loading {
     text-align: center;
-    padding: 3rem;
-    font-size: 1.2rem;
-    color: #7f8c8d;
+    padding: 2.5rem;
+    font-size: 1rem;
+    color: var(--color-text-muted);
 }

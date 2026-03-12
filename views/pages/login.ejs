@@ -17,14 +17,14 @@
             <% } %>
             <form action="/login" method="post" data-validate>
                 <fieldset>
-                    <label for="email"><img src="/images/icons/user.png" alt=""></label>
-                    <input type="email" name="email" placeholder="Напишите email" required>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Введите email" required>
                 </fieldset>
                 <fieldset>
-                    <label for="password"><img src="/images/icons/lock.png" alt=""></label>
-                    <input type="password" name="password" placeholder="Password" required>
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" placeholder="Введите пароль" required>
                 </fieldset>
-                <button type="submit">Login</button>
+                <button type="submit">Войти</button>
             </form>
             <p>У вас нет аккаунта? <a href="/register">Зарегистрируйтесь</a></p>
         </div>

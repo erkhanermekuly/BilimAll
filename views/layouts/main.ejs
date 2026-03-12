@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <%- include('../partials/head.ejs') %>
-    <title>BilimHub - Главная</title>
+    <title>BilimAll - Главная</title>
 </head>
 <body>
     <%- include('../partials/header.ejs') %>
@@ -10,7 +10,7 @@
     <main class="main-content">
         <section class="hero">
             <div class="container">
-                <h1>Добро пожаловать в BilimHub</h1>
+                <h1>Добро пожаловать в BilimAll</h1>
                 <% if (user) { %>
                     <p class="welcome-text">Здравствуйте, <strong><%= user.name %></strong>!</p>
                     <p>Email: <%= user.email %></p>

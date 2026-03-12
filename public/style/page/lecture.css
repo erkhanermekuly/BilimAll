@@ -1,179 +1,193 @@
 .lecture-container {
     max-width: 900px;
     margin: 2rem auto;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
 }
 
-.back-button {
+.lecture-container .back-button {
     display: inline-block;
-    margin-bottom: 2rem;
-    color: #3498db;
-    text-decoration: none;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
     font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.lecture-container .back-button:hover {
+    color: var(--color-primary-hover);
 }
 
 .lecture-header {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 2rem;
+    background: var(--color-surface);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+    margin-bottom: 1.5rem;
 }
 
-.lecture-title {
-    font-size: 2rem;
-    color: #2c3e50;
-    margin-bottom: 1rem;
+.lecture-header .lecture-title {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
 }
 
-.lecture-meta {
+.lecture-header .lecture-meta {
     display: flex;
-    gap: 2rem;
-    color: #7f8c8d;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
 }
 
 .video-container {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 2rem;
+    background: var(--color-surface);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    margin-bottom: 1.5rem;
 }
 
-.video-placeholder {
-    width: 100%;
-    height: 400px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
+.video-container video {
+    border-radius: var(--radius-sm);
 }
 
 .content-container {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 2rem;
+    background: var(--color-surface);
+    padding: 1.5rem 2rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    margin-bottom: 1.5rem;
 }
 
 .content-container h1 {
-    color: #2c3e50;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: var(--color-text);
+    margin: 1.5rem 0 0.75rem;
 }
 
 .content-container h2 {
-    color: #34495e;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+    color: var(--color-text);
+    margin: 1.25rem 0 0.5rem;
 }
 
 .content-container p {
-    line-height: 1.8;
-    color: #555;
+    line-height: 1.7;
+    color: var(--color-text);
     margin-bottom: 1rem;
 }
 
-.content-container ul, .content-container ol {
-    padding-left: 2rem;
+.content-container ul,
+.content-container ol {
+    padding-left: 1.5rem;
     margin-bottom: 1rem;
 }
 
 .content-container li {
-    margin-bottom: 0.5rem;
-    line-height: 1.6;
+    margin-bottom: 0.4rem;
+}
+
+.content-container code {
+    background: var(--color-surface-2);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.content-container pre {
+    background: var(--color-surface-2);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    margin: 1rem 0;
 }
 
 .tests-section {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background: var(--color-surface);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
 }
 
 .tests-title {
-    font-size: 1.5rem;
-    color: #2c3e50;
-    margin-bottom: 1.5rem;
-}
-
-.test-card {
-    border: 2px solid #ecf0f1;
-    border-radius: 8px;
-    padding: 1.5rem;
+    font-size: 1.2rem;
+    color: var(--color-text);
     margin-bottom: 1rem;
-    transition: border-color 0.3s;
+    font-weight: 600;
 }
 
-.test-card:hover {
-    border-color: #3498db;
+.lecture-container .test-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    background: var(--color-bg);
+    transition: border-color 0.2s;
 }
 
-.test-header {
+.lecture-container .test-card:hover {
+    border-color: var(--color-primary);
+}
+
+.lecture-container .test-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
-.test-number {
-    font-weight: bold;
-    color: #3498db;
+.lecture-container .test-number {
+    font-weight: 600;
+    color: var(--color-primary);
 }
 
-.test-score {
-    font-weight: bold;
+.lecture-container .test-score {
+    font-weight: 600;
 }
 
-.score-passed {
-    color: #27ae60;
+.lecture-container .score-passed {
+    color: var(--color-success);
 }
 
-.score-failed {
-    color: #e74c3c;
+.lecture-container .score-failed {
+    color: var(--color-danger);
 }
 
-.test-button {
+.lecture-container .test-button {
     width: 100%;
-    padding: 1rem;
+    padding: 0.75rem;
     border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 500;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: var(--font);
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.2s;
 }
 
-.test-button.primary {
-    background: #3498db;
+.lecture-container .test-button.primary {
+    background: var(--color-primary);
     color: white;
 }
 
-.test-button.primary:hover {
-    background: #2980b9;
+.lecture-container .test-button.primary:hover:not(:disabled) {
+    background: var(--color-primary-hover);
 }
 
-.test-button.secondary {
-    background: #95a5a6;
+.lecture-container .test-button.secondary {
+    background: var(--color-text-muted);
     color: white;
 }
 
-.test-button.secondary:hover {
-    background: #7f8c8d;
-}
-
-.test-button:disabled {
-    opacity: 0.5;
+.lecture-container .test-button:disabled {
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
-.loading {
+.lecture-container .loading {
     text-align: center;
-    padding: 3rem;
-    font-size: 1.2rem;
-    color: #7f8c8d;
+    padding: 2.5rem;
+    font-size: 1rem;
+    color: var(--color-text-muted);
 }

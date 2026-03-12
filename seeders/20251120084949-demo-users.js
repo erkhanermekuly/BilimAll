@@ -5,6 +5,14 @@ const bcrypt = require('bcrypt');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const [rows] = await queryInterface.sequelize.query(
+      "SELECT 1 FROM users WHERE email = 'admin@bilimhub.com' LIMIT 1"
+    );
+    if (rows && rows.length > 0) {
+      console.log('Пользователи уже есть, пропуск demo-users');
+      return;
+    }
+
     const password1 = await bcrypt.hash('password123', 10);
     const password2 = await bcrypt.hash('admin123', 10);
     const password3 = await bcrypt.hash('user123', 10);
