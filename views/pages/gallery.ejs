@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <link rel="stylesheet" href="/style/page/gallery.css">
+    <title>Галерея - BilimHub</title>
+</head>
+<body>
+    <%- include('../partials/header.ejs') %>
+
+    <main class="gallery-page">
+        <div class="container">
+            <h1>Галерея</h1>
+            <p class="gallery-subtitle">Фото и видео материалы</p>
+            <div id="gallery-grid" class="gallery-grid"></div>
+            <div id="gallery-empty" class="gallery-empty" style="display:none;">Пока нет материалов</div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer.ejs') %>
+    <script src="/js/gallery.js"></script>
+</body>
+</html>

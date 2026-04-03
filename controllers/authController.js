@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { fn, col, where } = require('sequelize');
 const User = require('../models/User');
 
 const generateToken = (userId) => {
@@ -13,10 +14,11 @@ const generateToken = (userId) => {
 exports.register = async (req, res) => {
     try {
         const { name, email, password, confirmPassword } = req.body;
+        const normalizedEmail = String(email || '').trim().toLowerCase();
         
-        console.log('Попытка регистрации:', { name, email });
+        console.log('Попытка регистрации:', { name, email: normalizedEmail });
 
-        if (!name || !email || !password || !confirmPassword) {
+        if (!name || !normalizedEmail || !password || !confirmPassword) {
             console.log('Не все поля заполнены');
             return res.status(400).render('pages/register', {
                 error: 'Заполните все поля',
@@ -40,7 +42,9 @@ exports.register = async (req, res) => {
             });
         }
 
-        const existingUser = await User.findOne({ where: { email } });
+        const existingUser = await User.findOne({
+            where: where(fn('LOWER', col('email')), normalizedEmail)
+        });
         if (existingUser) {
             console.log('Email уже используется');
             return res.status(400).render('pages/register', {
@@ -54,7 +58,7 @@ exports.register = async (req, res) => {
 
         const user = await User.create({
             name,
-            email,
+            email: normalizedEmail,
             password: hashedPassword
         });
         console.log('Пользователь создан:', user.id);
@@ -88,9 +92,10 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        const normalizedEmail = String(email || '').trim().toLowerCase();
         
-        console.log('Попытка входа:', email);
-        if (!email || !password) {
+        console.log('Попытка входа:', normalizedEmail);
+        if (!normalizedEmail || !password) {
             console.log('Не все поля заполнены');
             return res.status(400).render('pages/login', {
                 error: 'Заполните все поля',
@@ -98,9 +103,11 @@ exports.login = async (req, res) => {
             });
         }
 
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({
+            where: where(fn('LOWER', col('email')), normalizedEmail)
+        });
         if (!user) {
-            console.log('Пользователь не найден:', email);
+            console.log('Пользователь не найден:', normalizedEmail);
             return res.status(401).render('pages/login', {
                 error: 'Неверный email или пароль',
                 user: null

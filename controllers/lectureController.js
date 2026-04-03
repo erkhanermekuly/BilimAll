@@ -28,7 +28,8 @@ exports.getLecturesByTheme = async (req, res) => {
 exports.getLectureById = async (req, res) => {
   try {
     const { id } = req.params;
-    const userId = req.session.user?.id;
+    // Для API-маршрута приоритетно берем пользователя из middleware isAuthenticatedAPI
+    const userId = req.user?.id || req.session.user?.id;
     
     if (!userId) {
       return res.status(401).json({ error: 'Не авторизован' });
@@ -53,12 +54,6 @@ exports.getLectureById = async (req, res) => {
       return res.status(404).json({ error: 'Лекция не найдена' });
     }
     
-    const hasAccess = await checkLectureAccess(userId, lecture);
-    
-    if (!hasAccess) {
-      return res.status(403).json({ error: 'Доступ к лекции закрыт. Завершите предыдущую лекцию.' });
-    }
-    
     const progress = await UserProgress.findOne({
       where: {
         userId,
@@ -75,35 +70,6 @@ exports.getLectureById = async (req, res) => {
     res.status(500).json({ error: 'Ошибка при получении лекции' });
   }
 };
-
-async function checkLectureAccess(userId, lecture) {
-  const lectures = await Lecture.findAll({
-    where: { 
-      themeId: lecture.themeId,
-      isActive: true 
-    },
-    order: [['order', 'ASC']]
-  });
-  
-  if (lectures[0].id === lecture.id) {
-    return true;
-  }
-  
-  const currentIndex = lectures.findIndex(l => l.id === lecture.id);
-  if (currentIndex === -1) return false;
-  
-  const previousLecture = lectures[currentIndex - 1];
-  
-  const previousProgress = await UserProgress.findOne({
-    where: {
-      userId,
-      lectureId: previousLecture.id,
-      isCompleted: true
-    }
-  });
-  
-  return !!previousProgress;
-}
 
 exports.createLecture = async (req, res) => {
   try {

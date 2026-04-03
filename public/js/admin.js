@@ -2,6 +2,7 @@
 let themesData = [];
 let lecturesData = [];
 let usersData = [];
+let galleryData = [];
 
 async function loadAdminData() {
     try {
@@ -14,6 +15,12 @@ async function loadAdminData() {
             credentials: 'include'
         });
         usersData = await usersResponse.json();
+
+        // Загрузка галереи
+        const galleryResponse = await fetch('/api/gallery', {
+            credentials: 'include'
+        });
+        galleryData = await galleryResponse.json();
         
         // Подсчет статистики
         let totalLectures = 0;
@@ -41,12 +48,118 @@ async function loadAdminData() {
         renderLectures();
         renderTests();
         renderUsers();
+        renderGallery();
         
         document.getElementById('loading').style.display = 'none';
         document.getElementById('admin-content').style.display = 'block';
     } catch (error) {
         console.error('Ошибка загрузки данных:', error);
         document.getElementById('loading').textContent = 'Ошибка загрузки данных';
+    }
+}
+
+function renderGallery() {
+    const container = document.getElementById('gallery-list');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (!Array.isArray(galleryData) || galleryData.length === 0) {
+        container.innerHTML = '<div class="empty-state">Материалы галереи не добавлены</div>';
+        return;
+    }
+
+    galleryData.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        const mediaPreview = item.type === 'video'
+            ? `<video src="${item.url}" style="width: 100%; max-height: 220px; border-radius: 6px;" controls></video>`
+            : `<img src="${item.url}" alt="${item.title || 'Фото'}" style="width: 100%; max-height: 220px; object-fit: cover; border-radius: 6px;">`;
+
+        card.innerHTML = `
+            <div class="item-header">
+                <div class="item-title">${item.title || (item.type === 'video' ? 'Видео' : 'Фото')}</div>
+                <div class="item-actions">
+                    <button class="action-button action-delete" onclick="deleteGalleryItem(${item.id})">🗑️ Удалить</button>
+                </div>
+            </div>
+            <div class="item-meta">${item.type === 'video' ? 'Видео' : 'Фото'}</div>
+            <div style="margin-top: 0.75rem;">${mediaPreview}</div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+async function uploadGalleryMedia() {
+    const fileInput = document.getElementById('gallery-file');
+    const titleInput = document.getElementById('gallery-title');
+    const file = fileInput.files[0];
+    const title = (titleInput.value || '').trim();
+
+    if (!file) {
+        alert('Выберите файл');
+        return;
+    }
+
+    const isImage = (file.type || '').startsWith('image/');
+    const type = isImage ? 'image' : 'video';
+    const uploadUrl = isImage ? '/api/upload/image' : '/api/upload/video';
+    const fieldName = isImage ? 'image' : 'video';
+
+    try {
+        const formData = new FormData();
+        formData.append(fieldName, file);
+
+        const uploadResponse = await fetch(uploadUrl, {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        });
+        const uploadPayload = await uploadResponse.json();
+
+        if (!uploadResponse.ok) {
+            throw new Error(uploadPayload.error || 'Ошибка загрузки файла');
+        }
+
+        const mediaUrl = isImage ? uploadPayload.imagePath : uploadPayload.videoPath;
+
+        const saveResponse = await fetch('/api/gallery', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ type, url: mediaUrl, title })
+        });
+        const savePayload = await saveResponse.json();
+
+        if (!saveResponse.ok) {
+            throw new Error(savePayload.error || 'Ошибка сохранения галереи');
+        }
+
+        fileInput.value = '';
+        titleInput.value = '';
+        alert('Материал добавлен в галерею');
+        loadAdminData();
+    } catch (error) {
+        alert('Ошибка: ' + error.message);
+    }
+}
+
+async function deleteGalleryItem(id) {
+    if (!confirm('Удалить этот материал из галереи?')) return;
+
+    try {
+        const response = await fetch(`/api/gallery/${id}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+        const payload = await response.json();
+
+        if (!response.ok) {
+            throw new Error(payload.error || 'Ошибка удаления');
+        }
+
+        loadAdminData();
+    } catch (error) {
+        alert('Ошибка: ' + error.message);
     }
 }
 
@@ -272,6 +385,9 @@ function openLectureModal() {
     document.getElementById('lecture-form').reset();
     document.getElementById('lecture-id').value = '';
     document.getElementById('video-preview').style.display = 'none';
+    document.getElementById('pdf-preview').style.display = 'none';
+    document.getElementById('lecture-images-preview').style.display = 'none';
+    document.getElementById('lecture-images-preview').innerHTML = '';
     document.getElementById('lecture-modal').classList.add('active');
 }
 
@@ -291,6 +407,26 @@ async function editLecture(id) {
     document.getElementById('lecture-video').value = lecture.videoUrl || '';
     document.getElementById('lecture-duration').value = lecture.duration || 15;
     document.getElementById('lecture-order').value = lecture.order || 0;
+
+    const currentMedia = lecture.videoUrl || '';
+    const isPdf = currentMedia.toLowerCase().endsWith('.pdf');
+    const videoPreview = document.getElementById('video-preview');
+    const videoPlayer = document.getElementById('video-preview-player');
+    const pdfPreview = document.getElementById('pdf-preview');
+    const pdfFrame = document.getElementById('pdf-preview-frame');
+
+    videoPreview.style.display = 'none';
+    pdfPreview.style.display = 'none';
+
+    if (currentMedia) {
+        if (isPdf) {
+            pdfFrame.src = currentMedia;
+            pdfPreview.style.display = 'block';
+        } else {
+            videoPlayer.src = currentMedia;
+            videoPreview.style.display = 'block';
+        }
+    }
     
     document.getElementById('lecture-modal').classList.add('active');
 }
@@ -319,48 +455,133 @@ async function deleteLecture(id) {
     }
 }
 
-// Обработка загрузки видео
+async function uploadLectureImage(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await fetch('/api/upload/image', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+    });
+
+    const contentType = response.headers.get('content-type') || '';
+    const isJson = contentType.includes('application/json');
+    const payload = isJson ? await response.json() : await response.text();
+
+    if (!response.ok) {
+        const serverMessage = isJson
+            ? (payload.error || payload.message || `HTTP ${response.status}`)
+            : (String(payload || '').trim() || `HTTP ${response.status}`);
+        throw new Error(serverMessage);
+    }
+
+    if (!payload.imagePath) {
+        throw new Error('Сервер не вернул путь к изображению');
+    }
+
+    return payload.imagePath;
+}
+
+// Обработка загрузки фотографий лекции (вставка в Markdown контент)
+document.getElementById('lecture-images-files').addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const input = e.target;
+    const contentField = document.getElementById('lecture-content');
+    const preview = document.getElementById('lecture-images-preview');
+    preview.style.display = 'grid';
+
+    input.disabled = true;
+    input.style.opacity = '0.5';
+
+    try {
+        for (const file of files) {
+            const imagePath = await uploadLectureImage(file);
+            const markdownLine = `\n![${file.name}](${imagePath})\n`;
+            contentField.value = `${contentField.value}${markdownLine}`;
+
+            const img = document.createElement('img');
+            img.src = imagePath;
+            img.alt = file.name;
+            img.style.cssText = 'width: 100%; height: 90px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd;';
+            preview.appendChild(img);
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки фотографий лекции:', error);
+        alert(`Ошибка загрузки фото: ${error.message || 'неизвестная ошибка'}`);
+    } finally {
+        input.disabled = false;
+        input.style.opacity = '1';
+        input.value = '';
+    }
+});
+
+// Обработка загрузки видео или PDF
 document.getElementById('lecture-video-file').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Предпросмотр видео
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
     const videoPreview = document.getElementById('video-preview');
     const videoPlayer = document.getElementById('video-preview-player');
-    const reader = new FileReader();
+    const pdfPreview = document.getElementById('pdf-preview');
+    const pdfFrame = document.getElementById('pdf-preview-frame');
 
-    reader.onload = (event) => {
-        videoPlayer.src = event.target.result;
-        videoPreview.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
+    videoPreview.style.display = 'none';
+    pdfPreview.style.display = 'none';
+
+    if (isPdf) {
+        pdfFrame.src = URL.createObjectURL(file);
+        pdfPreview.style.display = 'block';
+    } else {
+        // Предпросмотр видео
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            videoPlayer.src = event.target.result;
+            videoPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
 
     // Загрузка на сервер
     const formData = new FormData();
-    formData.append('video', file);
+    formData.append(isPdf ? 'pdf' : 'video', file);
 
     try {
         const uploadButton = e.target;
         uploadButton.disabled = true;
         uploadButton.style.opacity = '0.5';
 
-        const response = await fetch('/api/upload/video', {
+        const response = await fetch(isPdf ? '/api/upload/pdf' : '/api/upload/video', {
             method: 'POST',
             credentials: 'include',
             body: formData
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            document.getElementById('lecture-video').value = data.videoPath;
-            console.log('Видео загружено:', data.videoPath);
-        } else {
-            const error = await response.json();
-            alert('Ошибка загрузки видео: ' + error.error);
+        const contentType = response.headers.get('content-type') || '';
+        const isJson = contentType.includes('application/json');
+        const payload = isJson ? await response.json() : await response.text();
+
+        if (!response.ok) {
+            const serverMessage = isJson
+                ? (payload.error || payload.message || `HTTP ${response.status}`)
+                : (String(payload || '').trim() || `HTTP ${response.status}`);
+            alert(`Ошибка загрузки ${isPdf ? 'PDF' : 'видео'}: ${serverMessage}`);
+            return;
         }
+
+        const mediaPath = isPdf ? payload.pdfPath : payload.videoPath;
+        if (!mediaPath) {
+            throw new Error('Сервер не вернул путь к загруженному файлу');
+        }
+
+        document.getElementById('lecture-video').value = mediaPath;
+        console.log(isPdf ? 'PDF загружен:' : 'Видео загружено:', mediaPath);
     } catch (error) {
-        console.error('Ошибка загрузки видео:', error);
-        alert('Произошла ошибка при загрузке видео');
+        console.error('Ошибка загрузки файла:', error);
+        alert(`Произошла ошибка при загрузке ${isPdf ? 'PDF' : 'видео'}: ${error.message || 'неизвестная ошибка'}`);
     } finally {
         e.target.disabled = false;
         e.target.style.opacity = '1';

@@ -5,7 +5,8 @@ const fs = require('fs');
 // Создаем папки для загрузки если их нет
 const uploadDirs = {
     videos: path.join(__dirname, '../public/uploads/videos'),
-    images: path.join(__dirname, '../public/uploads/images')
+    images: path.join(__dirname, '../public/uploads/images'),
+    pdfs: path.join(__dirname, '../public/uploads/pdfs')
 };
 
 Object.values(uploadDirs).forEach(dir => {
@@ -80,7 +81,41 @@ const uploadImage = multer({
     fileFilter: imageFilter
 });
 
+// Настройка хранилища для PDF
+const pdfStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDirs.pdfs);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'pdf-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+// Фильтр для PDF
+const pdfFilter = (req, file, cb) => {
+    const isPdfExt = path.extname(file.originalname).toLowerCase() === '.pdf';
+    const mime = String(file.mimetype || '').toLowerCase();
+    const isPdfMime = mime.includes('pdf') || mime === 'application/octet-stream' || mime === '';
+
+    if (isPdfExt && isPdfMime) {
+        return cb(null, true);
+    } else {
+        cb(new Error('Разрешены только PDF файлы'));
+    }
+};
+
+// Middleware для загрузки PDF
+const uploadPdf = multer({
+    storage: pdfStorage,
+    limits: {
+        fileSize: 20 * 1024 * 1024 // 20MB максимум
+    },
+    fileFilter: pdfFilter
+});
+
 module.exports = {
     uploadVideo,
-    uploadImage
+    uploadImage,
+    uploadPdf
 };

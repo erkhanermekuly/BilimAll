@@ -76,6 +76,7 @@ BilimHub - это современная образовательная онла
 2. Учётные данные (если выполняли `npm run db:reset` или сиды):
    - **admin@bilimhub.com** — пароль: **admin123**
    - **admin@gmail.com** — пароль: **admin12345**
+   - **admin2@bilimhub.com** — пароль: **admin24680**
 3. Если после входа пишет «Доступ запрещен» или не перенаправляет в админку — у пользователя в БД нет роли `admin`. Выполните в корне проекта:
    ```bash
    node scripts/setAdminRole.js admin@bilimhub.com
