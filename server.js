@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const learningRoutes = require('./routes/learningRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const galleryRoutes = require('./routes/galleryRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 const { isAuthenticated } = require('./middleware/auth');
 
@@ -130,6 +131,14 @@ app.get('/contacts', (req, res) => {
     res.render('pages/contacts');
 });
 
+app.get('/gallery', (req, res) => {
+    res.render('pages/gallery');
+});
+
+app.get('/olimps', (req, res) => {
+    res.render('pages/olimps')
+})
+
 // Админ-панель (только для администраторов)
 const { isAdmin } = require('./middleware/auth');
 app.get('/admin', isAdmin, (req, res) => {
@@ -141,6 +150,7 @@ app.use('/', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api', learningRoutes);
 app.use('/api', uploadRoutes);
+app.use('/api', galleryRoutes);
 app.use('/api/ai', aiRoutes);
 
 const PORT = process.env.PORT || 5000;

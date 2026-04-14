@@ -31,6 +31,10 @@
                 </video>
             </div>
 
+            <div class="video-container" id="pdf-container" style="display: none;">
+                <iframe id="lecture-pdf" src="" style="width: 100%; min-height: 650px; border-radius: 8px; border: 1px solid #ddd;" title="PDF лекция"></iframe>
+            </div>
+
             <div class="content-container" id="content-container">
                 <!-- Контент лекции -->
             </div>
@@ -59,7 +63,13 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Лекция не найдена');
+                    const contentType = response.headers.get('content-type') || '';
+                    const isJson = contentType.includes('application/json');
+                    const payload = isJson ? await response.json() : await response.text();
+                    const serverMessage = isJson
+                        ? (payload.error || payload.message || `HTTP ${response.status}`)
+                        : (String(payload || '').trim() || `HTTP ${response.status}`);
+                    throw new Error(serverMessage);
                 }
 
                 const data = await response.json();
@@ -73,11 +83,17 @@
                 document.getElementById('lecture-duration').innerHTML = `⏱️ ${lecture.duration || 15} мин`;
                 document.getElementById('lecture-theme').innerHTML = `📚 ${lecture.theme.title}`;
 
-                // Видео
+                // Видео или PDF
                 if (lecture.videoUrl) {
-                    document.getElementById('video-container').style.display = 'block';
-                    document.getElementById('video-source').src = lecture.videoUrl;
-                    document.getElementById('lecture-video').load();
+                    const isPdf = lecture.videoUrl.toLowerCase().endsWith('.pdf');
+                    if (isPdf) {
+                        document.getElementById('pdf-container').style.display = 'block';
+                        document.getElementById('lecture-pdf').src = lecture.videoUrl;
+                    } else {
+                        document.getElementById('video-container').style.display = 'block';
+                        document.getElementById('video-source').src = lecture.videoUrl;
+                        document.getElementById('lecture-video').load();
+                    }
                 }
 
                 // Контент (Markdown)
@@ -88,7 +104,7 @@
                 loadTests(lecture.tests, progress);
             } catch (error) {
                 console.error('Ошибка загрузки лекции:', error);
-                document.getElementById('loading').textContent = 'Ошибка загрузки лекции';
+                document.getElementById('loading').textContent = `Ошибка загрузки лекции: ${error.message}`;
             }
         }
 

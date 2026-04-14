@@ -21,7 +21,9 @@ exports.isAuthenticated = async (req, res, next) => {
         req.session.user = {
             id: user.id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            role: user.role,
+            createdAt: user.createdAt
         };
         next();
     } catch (error) {
